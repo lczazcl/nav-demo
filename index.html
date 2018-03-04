@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <main>
+    	<div class="wrapper" id="main"></div>
+    </main>
+    <footer></footer>
+	
+	<script src="./main.js"></script>
+    <script>
+    	//1.初始化数据
+    	var hashA = init()
+    	var keys = hashA['keys']
+    	var hash = hashA['hash']
+
+    	//2.生成键盘
+    	generateKeyboard(keys,hash)
+
+    	//3.监听用户动作
+    	listenToUser(hash)
+
+    	
+
+    	/*下面是工具函数*/
+
+    	//取出 localStorage 中 zzz 对应的hash
+    	function getFromLocalStorage(name){
+    		return JSON.parse(localStorage.getItem(name) || 'null')
+    	}
+
+    	//创建标签
+    	function tag(tagName,attributes){
+    		/*
+    		var element = document.createElement(tagName)
+    		for(var key in attributes){			//key为className,id,textContent
+    			element[key] = attributes[key]	//attributes有什么key就赋值给element什么key
+    		}
+    		return element
+    		*/
+    		return document.createElement(tagName)
+    	}
+
+    	//创建span
+    	function createSpan(textContent){
+    		var span = tag('span')
+    		span.textContent = textContent
+    		span.className = 'text'
+    		return span
+    	}
+
+    	//创建button
+    	function createButton(id){
+    		var button = tag('button')
+	    		button.id = id
+	    		button.textContent = '编辑'
+	    		button.onclick = function(xxx){
+	    			//console.log(xxx['target']['id'])
+	    			button2 = xxx['target']								//当前按钮
+	    			img2 = button2.previousSibling						//当前按钮下的图片
+	    			key = button2['id']									//q w e r
+	    			x = prompt('请输入网址')							//输入框
+	    			hash[key] = x 										//hash变更
+	    			img2.src = '//' + x + '/favicon.ico'				//hash变更，同时更改图片
+	    			img2.onerror = function(xxx){
+	    				xxx.target.src = '//i.loli.net/2018/03/04/5a9b6ce387dbf.png'	//变更hash后，图片出错
+	    			}
+	    			localStorage.setItem('zzz',JSON.stringify(hash))	//存入localStorage
+    			}
+    		return button
+    	}
+
+    	//创建img
+    	function createImage(domain){
+    		var img = tag('img')
+	    		if(domain){			//设置了图片
+	    			img.src = '//' + domain + '/favicon.ico'	
+	    		}else{							//没设置图片
+	    			img.src = '//i.loli.net/2018/03/04/5a9b6ce387dbf.png'
+	    		}
+	    		img.onerror = function(xxx){	//图片下载失败
+	    			xxx.target.src = '//i.loli.net/2018/03/04/5a9b6ce387dbf.png'
+	    		}
+	    	return img	
+    	}
+
+    	//1.初始化数据
+    	function init(){
+	    	var keys = {
+	    		0 : {0:'q',1:'w',2:'e',3:'r',4:'t',5:'y',6:'u',7:'i',8:'o',9:'p',length:10},
+	    		1 : {0:'a',1:'s',2:'d',3:'f',4:'g',5:'h',6:'j',7:'k',8:'l',length:9},
+	    		2 : {0:'z',1:'x',2:'c',3:'v',4:'b',5:'n',6:'m',length:7},
+	    		length : 3
+	    	};
+
+	    	var hash = {
+	    		'q' : 'qq.com',
+	    		'w' : 'weibo.com',
+	    		'e' : 'ele.me',
+	    		'r' : 'renren.com',
+	    		't' : 'tianya.com',
+	    		'y' : 'youtube.com',
+	    		'u' : 'uc.com',
+	    		'i' : 'iqiyi.com',
+	    		'o' : 'opera.com',
+	    		'p' : undefined,
+	    		'a' : 'acfun.tv',
+	    		's' : 'souhu.com',
+	    		'z' : 'zhihu.com',
+	    		'm' : 'meituan.com'
+	    	}
+
+	    	var hashInLocalStorage = getFromLocalStorage('zzz')
+	    	if(hashInLocalStorage){
+	    		hash = hashInLocalStorage
+	    	}
+
+	    	return {
+	    		"keys" : keys,
+	    		"hash" : hash
+	    	}
+    	}
+
+    	//2.生成键盘
+    	function generateKeyboard(keys,hash){
+    		for(var index = 0;index < keys['length'];index++){
+	    		var div = tag('div')
+		    		div.className = 'row'
+		    		main.appendChild(div)
+
+	    		var row = keys[index]	//第一行数组 第二行数组 第三行数组
+
+	    		for(index2 = 0;index2<row['length'];index2++){
+	    			var kbd = tag('kbd')
+			    		kbd.className = 'key'
+			    		div.appendChild(kbd)
+
+		    		var span = createSpan(row[index2])
+			    		kbd.appendChild(span)
+
+		    		var img = createImage(hash[row[index2]])
+			    		kbd.appendChild(img)
+
+		    		var button = createButton(row[index])
+			    		kbd.appendChild(button)
+			    }
+	    	}
+    	}
+
+    	//3.监听键盘
+    	function listenToUser(hash){
+    		document.onkeypress = function(xxx){
+	    		key = xxx['key']	//q w e
+	    		website = hash[key]	//hash中对应的网址
+	    		//location.href = 'http://' + website
+	    		window.open('http://'+website,'_blank')
+	    	}
+    	}
+    </script>
+</body>
+</html>
