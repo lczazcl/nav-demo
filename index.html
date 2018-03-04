@@ -67,7 +67,7 @@
 	    			key = button2['id']									//q w e r
 	    			x = prompt('请输入网址')							//输入框
 	    			hash[key] = x 										//hash变更
-	    			img2.src = '//' + x + '/favicon.ico'				//hash变更，同时更改图片
+	    			img2.src = 'http://' + x + '/favicon.ico'				//hash变更，同时更改图片
 	    			img2.onerror = function(xxx){
 	    				xxx.target.src = '//i.loli.net/2018/03/04/5a9b6ce387dbf.png'	//变更hash后，图片出错
 	    			}
@@ -80,7 +80,7 @@
     	function createImage(domain){
     		var img = tag('img')
 	    		if(domain){			//设置了图片
-	    			img.src = '//' + domain + '/favicon.ico'	
+	    			img.src = 'http://' + domain + '/favicon.ico'	
 	    		}else{							//没设置图片
 	    			img.src = '//i.loli.net/2018/03/04/5a9b6ce387dbf.png'
 	    		}
